@@ -1,0 +1,30 @@
+{
+  "name": "world_map_trend_news",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon index.js",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/samuraikun/world_map_trend_news.git"
+  },
+  "author": "samuraikun",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samuraikun/world_map_trend_news/issues"
+  },
+  "homepage": "https://github.com/samuraikun/world_map_trend_news#readme",
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.1",
+    "nodemon": "^1.17.5"
+  }
+}
