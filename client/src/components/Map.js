@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import worldmap from './world-50m.json';
+import worldmap from '../world-50m.json';
 import {
   ComposableMap,
   ZoomableGroup,
   Geographies,
   Geography
 } from 'react-simple-maps';
+import Modal from 'react-modal';
+import ArticleList from './ArticleList';
 
 const wrapperStyles = {
   width: "80%",
@@ -35,15 +37,44 @@ const geoStyles = {
   }
 }
 
-class Map extends Component {
-  async handleClick() {
-    try {
-      const response = await axios.get('/api/news/sources?country=us&language=en');
+Modal.setAppElement('#root');
 
-      console.log(response.data);
+class Map extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showModal: false,
+      articles: []
+    };
+
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
+  }
+
+  async fetchCountryNews(event) {
+    try {
+      const response = await axios.get('/api/news/recent', {
+        params: {
+          category: 'technology',
+          country: 'jp'
+        }
+      });
+
+      this.setState({ articles: response.data.articles });
     } catch (err) {
       console.log(err);
     }
+  }
+
+  handleOpenModal(event) {
+    this.fetchCountryNews(event);
+
+    this.setState({ showModal: true });
+  }
+
+  handleCloseModal() {
+    this.setState({ showModal: false });
   }
 
   render() {
@@ -68,13 +99,20 @@ class Map extends Component {
                   key={i}
                   geography={geography}
                   projection={projection}
-                  onClick={this.handleClick}
+                  onClick={this.handleOpenModal}
                   style={geoStyles}
                 />
               ))}
             </Geographies>
           </ZoomableGroup>
         </ComposableMap>
+        <Modal
+          isOpen={this.state.showModal}
+          contentLabel="minila modal example"
+        >
+          <ArticleList articles={this.state.articles} />
+          <button onClick={this.handleCloseModal}>Close Modal</button>
+        </Modal>
       </div>
     )
   }
